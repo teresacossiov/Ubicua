@@ -3,17 +3,17 @@ package com.teresa.ubicua.repository;
 import com.teresa.ubicua.entity.Address;
 import com.teresa.ubicua.entity.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-
 @SpringBootTest
-public class OneToOneMappingTest {
+public class OneToOneBidirectionalMappingTest {
     @Autowired
-    private OrderRepository orderRepository;
+    private AddressRepository addressRepository;
     @Test
-    void SaveMethod(){
+    void saveAddressMethod(){
         Order order = new Order();
         order.setOrderTrackingNumber("10000ABC");
         order.setTotalQuantity(5);
@@ -28,16 +28,17 @@ public class OneToOneMappingTest {
         address.setZipCode("00000");
 
         order.setBillingAddress(address);
-        orderRepository.save(order);
-    }
-    @Test
-    void updateMethod(){
-        Order order = orderRepository.findById(1L).get();
-        order.setStatus("Entregado");
-        order.getBillingAddress().setZipCode("11111"); //get consigo y set actualizo
+        address.setOrder(order);
 
-        orderRepository.save(order);
+        addressRepository.save(address);
+    }
+
+    @Test
+    void updateAddressMethod(){
+        Address address1 = addressRepository.findById(1L).get();
+        address1.setZipCode("99999");
+        address1.getOrder().setStatus("Entregado");
+
+        addressRepository.save(address1);
     }
 }
-
-

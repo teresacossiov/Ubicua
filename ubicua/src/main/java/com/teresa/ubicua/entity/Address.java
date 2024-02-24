@@ -22,4 +22,9 @@ public class Address {
     private String State;
     private String Country;
     private String zipCode;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")//con quien voy a hacer join
+    private Order order;
 }

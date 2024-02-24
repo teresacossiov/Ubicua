@@ -34,8 +34,7 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime lastUpdated;
 
-    @OneToOne (cascade = CascadeType.ALL)//si elimino un pedido, elimino todo
-    @JoinColumn(name = "billing_address_id",
-            referencedColumnName = "id")
+    @OneToOne (cascade = CascadeType.ALL, mappedBy = "order")//si elimino un pedido, elimino todo
+    //@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
     private Address billingAddress;
 }
