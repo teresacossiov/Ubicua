@@ -8,6 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +37,19 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime lastUpdated;
 
-    @OneToOne (cascade = CascadeType.ALL, mappedBy = "order")//si elimino un pedido, elimino todo
-    //@JoinColumn(name = "billing_address_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
     private Address billingAddress;
+
+    //Por defecto, FetchType es lazy
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)//si elimino un pedido, elimino todo
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Set<OrderItem> orderItems = new HashSet<>();//Set<> es una coleccion. Hash permite acceso mas rapido.
+
+    public BigDecimal getTotalAmount(){
+        BigDecimal amount = new BigDecimal(0.0);
+        for(OrderItem item: this.orderItems){
+            amount = amount.add(item.getPrice());
+        }
+        return amount;
+    }
 }
